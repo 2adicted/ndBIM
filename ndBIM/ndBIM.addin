@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command ndBIM</Text>
+    <Description>Some description for ndBIM</Description>
+    <Assembly>ndBIM.dll</Assembly>
+    <FullClassName>ndBIM.Command</FullClassName>
+    <ClientId>c71b3fab-072a-4d53-980b-b317f3b45a49</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application ndBIM</Name>
+    <Assembly>ndBIM.dll</Assembly>
+    <FullClassName>ndBIM.App</FullClassName>
+    <ClientId>4decebc5-0624-48d2-b8e4-818170f3e587</ClientId>
+    <VendorId>com.typepad.thebuildingcoder</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
