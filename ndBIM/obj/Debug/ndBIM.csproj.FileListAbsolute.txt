@@ -1,0 +1,7 @@
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\bin\Debug\ndBIM.dll
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\bin\Debug\ndBIM.pdb
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug\ndBIM.csprojResolveAssemblyReference.cache
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug\ndBIM.dll
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug\ndBIM.pdb
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug\ndBIM.ndBIMInterface.resources
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug\ndBIM.csproj.GenerateResource.Cache
