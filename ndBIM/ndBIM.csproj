@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <StartAction>Program</StartAction>
     <StartProgram>$(ProgramW6432)\Autodesk\Revit 2017\Revit.exe</StartProgram>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -57,10 +58,18 @@
     <Compile Include="ndBIMInterface.Designer.cs">
       <DependentUpon>ndBIMInterface.cs</DependentUpon>
     </Compile>
+    <Compile Include="Parameters.cs" />
+    <Compile Include="ProjectParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ndBIM.addin" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ndBIMInterface.resx">
+      <DependentUpon>ndBIMInterface.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
