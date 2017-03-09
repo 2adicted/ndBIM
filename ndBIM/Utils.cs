@@ -224,5 +224,19 @@ namespace ndBIM
             }
             return guid;
         }
+        public static CategorySet AssignableCategories(UIApplication uiapp, Document doc)
+        {
+            CategorySet catSet = uiapp.Application.Create.NewCategorySet();
+            Categories categories = doc.Settings.Categories;
+
+            foreach (Category cat in categories)
+            {
+                if (cat.AllowsBoundParameters)
+                {
+                    catSet.Insert(cat);
+                }
+            }
+            return catSet;
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace ndBIM
             set
             {
                 message = value;
-                MessageBox.Show(value);
+                if(String.IsNullOrEmpty(message)) MessageBox.Show(value);
             }
         }
 
@@ -74,10 +74,9 @@ namespace ndBIM
                 this.InvalidDocument();
                 return;
             }
-            this.Text = title + String.Format(" - {0}", Utils.Truncate(doc.Title, 10));
             // End Revit Scope
             SetParameters();
-            DisplayData();
+            //DisplayData();
         }
 
         private void SetParameters()
@@ -97,10 +96,6 @@ namespace ndBIM
 
         private void DisplayData()
         {
-            flowPanel_01.Controls.Clear();
-            flowPanel_02.Controls.Clear();
-
-            flowPanel_01.WrapContents = false;
 
             List<System.Windows.Forms.Control> itemsLeft = new List<System.Windows.Forms.Control>();
             //List<System.Windows.Forms.Control> itemsRight = new List<System.Windows.Forms.Control>();
@@ -114,10 +109,6 @@ namespace ndBIM
                 //itemsRight.Add(txtInput);
             }
             
-            this.flowPanel_01.Controls.AddRange(itemsLeft.ToArray());
-            this.flowPanel_01.SetFlowBreak(itemsLeft.ToArray()[itemsLeft.Count - 1], true);
-            //this.flowPanel_01.Controls.AddRange(itemsRight.ToArray());
-            this.flowPanel_01.WrapContents = true;
 
             itemsLeft.Clear();
             //itemsRight.Clear();
@@ -130,11 +121,7 @@ namespace ndBIM
                 itemsLeft.Add(lbl);
                 //itemsRight.Add(txtInput);
             }
-
-            this.flowPanel_02.Controls.AddRange(itemsLeft.ToArray());
-            this.flowPanel_02.SetFlowBreak(itemsLeft.ToArray()[itemsLeft.Count - 1], true);
-            //this.flowPanel_02.Controls.AddRange(itemsRight.ToArray());
-            this.flowPanel_02.WrapContents = true;
+            
         }
 
         private System.Windows.Forms.Label createLabel(ProjectParameter item)
@@ -191,7 +178,7 @@ namespace ndBIM
         private void InvalidDocument()
         {
             this.mainPanel.Controls.Clear();
-            this.mainPanel.Controls.Add(error("Please, run in a Family Document"));
+            this.mainPanel.Controls.Add(error("Please, run in a Project Document"));
             this.doc = null;
         }
         private Label error(string message)
@@ -239,7 +226,6 @@ namespace ndBIM
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            Message = "Cancelled.";
             Cancel();
         }
         private void Cancel()
@@ -251,7 +237,6 @@ namespace ndBIM
         {
             if (keyData == Keys.Escape)
             {
-                Message = "Cancelled.";
                 Cancel();
                 return true;
             }
@@ -264,7 +249,7 @@ namespace ndBIM
             if(Utils.IsAlreadyBound(doc, parameter.Name))
             {
                 Cancel();
-                Message = "Parameter already exists";
+                Message = "Parameters already exists. Command will not be executed.";
                 return false;
             }
             using (Transaction tx = new Transaction(doc))
@@ -274,7 +259,7 @@ namespace ndBIM
                 DefinitionFile sharedParamsFile = Utils.GetSharedParamsFile(uiapp.Application);
                 if (null == sharedParamsFile)
                 {
-                    Message = "Error getting the shared params file.";
+                    Message = "Please, make sure you have set the Shared Parameters file for this project.";
                     return false;
                 }
                 // get or create the shared params group
@@ -297,16 +282,7 @@ namespace ndBIM
                 }
                 try
                 {
-                    CategorySet catSet = uiapp.Application.Create.NewCategorySet();
-                    Categories categories = doc.Settings.Categories;
-
-                    foreach(Category cat in categories)
-                    {
-                        if (cat.AllowsBoundParameters)
-                        {
-                            catSet.Insert(cat);
-                        }                        
-                    }
+                    CategorySet catSet = Utils.AssignableCategories(uiapp, doc);
 
                     Autodesk.Revit.DB.Binding binding = null;
 
