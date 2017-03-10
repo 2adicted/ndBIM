@@ -226,19 +226,20 @@ namespace ndBIM
                             int i = 1;
                             string name = "";
                             string second = "";
-                            Element type = doc.GetElement(el.GetTypeId());
-                            while (type.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))) != null)
+                            //Element type = doc.GetElement(el.GetTypeId());
+                            while (el.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))) != null)
                             {
-                                string a = type.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))).AsString();
-                                string b = type.LookupParameter(String.Format("Unit_{0}", i.ToString("00"))).AsString();
-                                string c = type.LookupParameter(String.Format("Factor_{0}", i.ToString("00"))).AsString();
+                                string a = el.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))).AsString();
+                                string b = el.LookupParameter(String.Format("Unit_{0}", i.ToString("00"))).AsString();
+                                string c = el.LookupParameter(String.Format("Factor_{0}", i.ToString("00"))).AsString();
+                                if (!String.IsNullOrEmpty(c)) c = String.Format("({0})", c);
                                 if (string.IsNullOrEmpty(a + b + c))
                                 {
                                     i++;
                                     continue;
                                 }
                                 name += second;
-                                name += String.Format("{0}_{1}({2})", a, b, c);
+                                name += String.Format("{0}_{1}{2}", a, b, c);
                                 second = "#";
                                 i++;
                             }

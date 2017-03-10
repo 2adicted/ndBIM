@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ndBIM.addin" />
+    <Resource Include="Resources\nbBIM.png" />
     <Resource Include="Resources\angry.png" />
     <Resource Include="Resources\favicon.png" />
   </ItemGroup>

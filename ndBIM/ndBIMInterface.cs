@@ -94,84 +94,6 @@ namespace ndBIM
             }
         }
 
-        private void DisplayData()
-        {
-
-            List<System.Windows.Forms.Control> itemsLeft = new List<System.Windows.Forms.Control>();
-            //List<System.Windows.Forms.Control> itemsRight = new List<System.Windows.Forms.Control>();
-
-            foreach (ProjectParameter param in group_01)
-            {
-                System.Windows.Forms.Label lbl = createLabel(param);
-                System.Windows.Forms.TextBox txtInput = createInputTextbox(param);
-
-                itemsLeft.Add(lbl);
-                //itemsRight.Add(txtInput);
-            }
-            
-
-            itemsLeft.Clear();
-            //itemsRight.Clear();
-
-            foreach (ProjectParameter param in group_02)
-            {
-                System.Windows.Forms.Label lbl = createLabel(param);
-                System.Windows.Forms.TextBox txtInput = createInputTextbox(param);
-
-                itemsLeft.Add(lbl);
-                //itemsRight.Add(txtInput);
-            }
-            
-        }
-
-        private System.Windows.Forms.Label createLabel(ProjectParameter item)
-        {
-            System.Windows.Forms.Label lbl = new System.Windows.Forms.Label();
-
-            string s = item.Name;
-            lbl.AutoSize = true;
-            //lbl.MaximumSize = new Size(Convert.ToInt32(scale_x * 200), 0);
-            lbl.MinimumSize = new Size(Convert.ToInt32(scale_x * 190), 0);
-            //lbl.Font = new Font("Arial", 8);
-            lbl.Margin = new Padding(0, 16, 0, 0);
-            //txt.KeyDown += new KeyEventHandler(textBox_KeyDown);
-            //txt.LostFocus += textBoxLostFocus;
-            //txt.TextChanged += textBoxEdited;
-            lbl.Name = s;
-            lbl.Text = s;
-            //lbl.BackColor = System.Drawing.SystemColors.Control;
-            //lbl.BorderStyle = BorderStyle.None;
-            //lbl.Padding = new Padding(3, 4, 3, 3);
-            //lbl.ForeColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            lbl.Tag = item;
-            toolTip1.SetToolTip(lbl, item.Tooltip);
-
-            return lbl;
-        }       
-
-        private System.Windows.Forms.TextBox createInputTextbox(ProjectParameter item)
-        {
-            System.Windows.Forms.TextBox txt = new System.Windows.Forms.TextBox();
-
-            string s = item.Name;
-
-            txt.Size = new Size(Convert.ToInt32(scale_x * 205), 10);
-            //txt.Dock = DockStyle.Fill;
-            //txt.KeyDown += new KeyEventHandler(textBox_KeyDown);
-            //txt.LostFocus += textBoxLostFocus;
-            //txt.TextChanged += textBoxEdited;
-            txt.Name = s + "_input";
-            //txt.BackColor = System.Drawing.SystemColors.Control;
-            txt.BorderStyle = BorderStyle.FixedSingle;
-            txt.Margin = new Padding(0, 10, 0, 0);
-            txt.ForeColor = System.Drawing.Color.FromArgb(50, 50, 50);
-            txt.Tag = item;
-            toolTip1.SetToolTip(txt, item.Tooltip);
-
-            return txt;
-        }
-
-
         /// <summary>
         /// Trigers if no valid Family Document is available on Refresh Document
         /// </summary>
@@ -295,7 +217,7 @@ namespace ndBIM
                         }
                         else
                         {
-                            doc.ParameterBindings.Insert(docParamDef, binding, BuiltInParameterGroup.PG_CONSTRUCTION);
+                            doc.ParameterBindings.Insert(docParamDef, binding, BuiltInParameterGroup.PG_COUPLER_ARRAY);
                         }
                     }
                     else
@@ -307,7 +229,7 @@ namespace ndBIM
                         }
                         else
                         {
-                            doc.ParameterBindings.Insert(docParamDef, binding, BuiltInParameterGroup.PG_CONSTRUCTION);
+                            doc.ParameterBindings.Insert(docParamDef, binding, BuiltInParameterGroup.PG_COUPLER_ARRAY);
                         }
                     }
                 }

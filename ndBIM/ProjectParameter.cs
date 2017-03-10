@@ -19,7 +19,7 @@ namespace ndBIM
         {
             this.name = name;
             this.tooltip = "";
-            this.type = "instance";
+            this.type = "Instance";
             this.groupName = group;
         }
 
