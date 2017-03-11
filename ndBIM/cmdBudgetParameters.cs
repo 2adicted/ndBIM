@@ -50,6 +50,26 @@ namespace ndBIM
         }
     }
     [Transaction(TransactionMode.Manual)]
+    public class cmdAboutUs : IExternalCommand
+    {
+        public Result Execute(
+          ExternalCommandData commandData,
+          ref string message,
+          ElementSet elements)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("http://ndbim.com");
+                return Result.Succeeded;
+            }
+            catch(Exception ex)
+            {
+                message = ex.ToString();
+                return Result.Failed;
+            }
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
     public class cmdToolsAndHosts : IExternalCommand
     {
         public string msg;

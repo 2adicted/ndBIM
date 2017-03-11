@@ -63,9 +63,9 @@ namespace ndBIM.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap angry {
+        internal static System.Drawing.Bitmap btn01 {
             get {
-                object obj = ResourceManager.GetObject("angry", resourceCulture);
+                object obj = ResourceManager.GetObject("btn01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace ndBIM.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap favicon {
+        internal static System.Drawing.Bitmap btn02 {
             get {
-                object obj = ResourceManager.GetObject("favicon", resourceCulture);
+                object obj = ResourceManager.GetObject("btn02", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,39 @@ namespace ndBIM.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap nbBIM {
+        internal static System.Drawing.Bitmap btn03 {
             get {
-                object obj = ResourceManager.GetObject("nbBIM", resourceCulture);
+                object obj = ResourceManager.GetObject("btn03", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap btn04 {
+            get {
+                object obj = ResourceManager.GetObject("btn04", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap btn05 {
+            get {
+                object obj = ResourceManager.GetObject("btn05", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap btn06 {
+            get {
+                object obj = ResourceManager.GetObject("btn06", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

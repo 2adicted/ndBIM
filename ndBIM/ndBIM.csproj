@@ -71,9 +71,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ndBIM.addin" />
-    <Resource Include="Resources\nbBIM.png" />
-    <Resource Include="Resources\angry.png" />
-    <Resource Include="Resources\favicon.png" />
+    <Resource Include="Resources\btn06.png" />
+    <Resource Include="Resources\btn05.png" />
+    <Resource Include="Resources\btn04.png" />
+    <Resource Include="Resources\btn03.png" />
+    <Resource Include="Resources\btn02.png" />
+    <Resource Include="Resources\btn01.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ndBIMInterface.resx">
