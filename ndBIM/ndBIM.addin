@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Application">
-    <Name>Application ndBIM</Name>
+    <Name>ndBIM</Name>
+    <!--<Assembly>C:\Program Files\ndBIM\ndBIM\ndBIM.dll</Assembly>-->
     <Assembly>ndBIM.dll</Assembly>
     <FullClassName>ndBIM.App</FullClassName>
-    <ClientId>4decebc5-0624-48d2-b8e4-818170f3e587</ClientId>
-    <VendorId>com.typepad.thebuildingcoder</VendorId>
-    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+    <ClientId>b52587c6-434c-4101-9f0c-9d51c00bcf6b</ClientId>
+    <VendorId>ndbim.com</VendorId>
+    <VendorDescription>ndBIM, http://ndbim.com/index.php/pt/ </VendorDescription>
   </AddIn>
 </RevitAddIns>

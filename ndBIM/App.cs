@@ -22,34 +22,22 @@ namespace ndBIM
 
             // Add a new ribbon panel
             RibbonPanel ribbonPanel_01 = application.CreateRibbonPanel(tabName, "Information");
+            RibbonPanel ribbonPanel_02 = application.CreateRibbonPanel(tabName, "Import/Export");
+            RibbonPanel ribbonPanel_03 = application.CreateRibbonPanel(tabName, "Software VICO");
             RibbonPanel ribbonPanel_04 = application.CreateRibbonPanel(tabName, "ndBIM Information");
 
             // Get dll assembly path
             string thisAssemblyPath = Assembly.GetExecutingAssembly().Location;
-
-            // create push button for Budget Parameters
-            PushButtonData b1Data = new PushButtonData(
-                String.Format("Create Budget {0} Parameters", Environment.NewLine),
-                String.Format("Create Budget {0} Parameters", Environment.NewLine),
-                thisAssemblyPath,
-                "ndBIM.cmdBudgetParameters");
-
-            PushButton pb1 = ribbonPanel_01.AddItem(b1Data) as PushButton;
-            pb1.ToolTip = "Creates and populates current project with predefined Shared Parameters.";
-            BitmapImage pb1Image = new BitmapImage(new Uri("pack://application:,,,/ndBIM;component/Resources/btn01.png"));
-            pb1.LargeImage = pb1Image;
-            // create push button for Tools and Hosts
-            PushButtonData b2Data = new PushButtonData(
-                "Automatic Fill",
-                "Automatic Fill",
-                thisAssemblyPath,
-                "ndBIM.cmdToolsAndHosts");
-
-            PushButton pb2 = ribbonPanel_01.AddItem(b2Data) as PushButton;
-            pb2.ToolTip = "Automatically populate Budget parameters. Only use after using Budget Parameters first.";
-            BitmapImage pb2Image = new BitmapImage(new Uri("pack://application:,,,/ndBIM;component/Resources/btn02.png"));
-            pb2.LargeImage = pb2Image;
-
+             
+            // Create the buttons
+            CreatePushButton(ribbonPanel_01, String.Format("Create Budget {0} Parameters", Environment.NewLine), thisAssemblyPath, "ndBIM.cmdBudgetParameters", 
+                "Creates and populates current project with predefined Shared Parameters.", "btn01.png");
+            CreatePushButton(ribbonPanel_01, "Automatic Fill", thisAssemblyPath, "ndBIM.cmdToolsAndHosts",
+                "Automatically populate Budget parameters. Only use after using Budget Parameters first.", "btn02.png");
+            CreatePushButton(ribbonPanel_02, "Exprot to Excel", thisAssemblyPath, "ndBIM.cmdExportExcel",
+                "Exports Budget Parameters to Excel.", "btn03.png");
+            CreatePushButton(ribbonPanel_02, "Import from Excel", thisAssemblyPath, "ndBIM.cmdImportExcel",
+                "Import Budget Parameters from Excel.", "btn04.png");
             CreatePushButton(ribbonPanel_04, "About us", thisAssemblyPath, "ndBIM.cmdAboutUs", "About us.", "btn06.png");
         }
         private static void CreatePushButton(RibbonPanel ribbonPanel, string name, string path, string command, string tooltip, string icon)

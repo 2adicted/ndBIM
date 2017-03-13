@@ -238,5 +238,23 @@ namespace ndBIM
             }
             return catSet;
         }
+
+        public static int GetIterations(UIApplication uiapp, Document doc)
+        {
+            int n = 1;
+            CategorySet catSet = Utils.AssignableCategories(uiapp, doc);
+            foreach(Category cat in catSet)
+            {
+                IList<Element> elements = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
+                if (elements.Count == 0) continue;
+                Element el = elements.First();
+                while (el.LookupParameter(String.Format("Budget Code_{0}", n.ToString("00"))) != null)
+                {
+                    n++;
+                }
+                return (n-1);
+            }
+            return 0;
+        }
     }
 }

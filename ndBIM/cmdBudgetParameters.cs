@@ -70,6 +70,49 @@ namespace ndBIM
         }
     }
     [Transaction(TransactionMode.Manual)]
+    public class cmdImportExcel : IExternalCommand
+    {
+        public string msg;
+
+        public Result Execute(
+          ExternalCommandData commandData,
+          ref string message,
+          ElementSet elements)
+        {
+            UIApplication uiapp = commandData.Application;
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            Application app = uiapp.Application;
+            Document doc = uidoc.Document;
+
+            ParameterManager manager = new ParameterManager(uiapp, doc);
+            manager.ImportExcel();
+            
+            return Result.Succeeded;
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
+    public class cmdExportExcel : IExternalCommand
+    {
+        public string msg;
+
+        public Result Execute(
+          ExternalCommandData commandData,
+          ref string message,
+          ElementSet elements)
+        {
+            UIApplication uiapp = commandData.Application;
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            Application app = uiapp.Application;
+            Document doc = uidoc.Document;
+
+            ParameterManager manager = new ParameterManager(uiapp, doc);
+            manager.ExportExcel();
+
+
+            return Result.Succeeded;
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
     public class cmdToolsAndHosts : IExternalCommand
     {
         public string msg;
@@ -204,7 +247,7 @@ namespace ndBIM
                                 IList<ElementId> ids = hostObject.FindInserts(false, false, false, false);
                                 if(ids.Contains(el.Id))
                                 {
-                                    hostName = String.Format("{0} : {1}", (hostObject as Wall).WallType.FamilyName, (hostObject as Wall).WallType.Name);
+                                    hostName = String.Format("{0}",(hostObject as Wall).WallType.Name);
                                 }
                             }
                             if (p != null) p.Set(hostName);

@@ -8,6 +8,72 @@ namespace ndBIM
 {
     static class Parameters
     {
+        internal static int ImportNum(int count)
+        {
+            // UPDATE AFTER COLUMNS ADJUSTMENT (9 to 8 - minus 1 column)
+            return (count - 9) / 3;
+        }
+        internal static Dictionary<int, string> parameterMap(int n)
+        {
+            Dictionary<int, string> dict = new Dictionary<int, string>();
+
+            int index = 0;
+
+            dict.Add(0, "ID");
+            foreach(string s in group01(n))
+            {
+                dict.Add(++index, s);
+            }
+            foreach(string s in group02().Select(x => x.Item1).ToList())
+            {
+                dict.Add(++index, s);
+            }
+            dict.Add(++index, "Family");
+            dict.Add(++index, "Category");
+
+            return dict;
+        }
+        internal static List<Tuple<string, string>> ProjectData(int n)
+        {
+            List<Tuple<string, string>> data = new List<Tuple<string, string>>();
+            data.AddRange(group01(n).Select(x => Tuple.Create(x,"Instance")));
+            data.AddRange(group02().Select(x => Tuple.Create(x.Item1, x.Item3)));
+            return data;
+        }
+        internal static Dictionary<string, string> parameterTypeMap(int n)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            
+            foreach (string s in group01(n))
+            {
+                dict.Add(s, "Instance");
+            }
+            foreach (Tuple<string, string> tuple in group02().Select(x => new Tuple<string, string>(x.Item1, x.Item3)).ToList())
+            {
+                dict.Add(tuple.Item1, tuple.Item2);
+            }
+
+            return dict;
+        }
+        internal static bool IsInsanceParameter(string name, Dictionary<string, string> parameterTypeMap)
+        {
+            return String.Equals("Instance", parameterTypeMap[name]);
+        }
+        internal static List<string> ProjectParameterNames(int n)
+        {
+            List<string> names = new List<string>();
+            
+            names.Add("ID");
+            names.AddRange(group01(n));
+
+            List<string> temp = group02().Select((x, index) => String.Format("{0} - {1}", index.ToString("00"), x.Item1)).ToList();
+
+            names.AddRange(temp);
+            names.Add("Family Type");
+            names.Add("Category");
+
+            return names;
+        }
         internal static List<string> group01(int n)
         {
             List<string> parameters = new List<string>();

@@ -35,6 +35,9 @@
     <StartProgram>$(ProgramW6432)\Autodesk\Revit 2017\Revit.exe</StartProgram>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus">
+      <HintPath>..\..\..\..\..\Downloads\EPPlus 4.1\DotNet4\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RevitAPI">
       <HintPath>$(ProgramW6432)\Autodesk\Revit 2017\RevitAPI.dll</HintPath>
@@ -59,6 +62,7 @@
     <Compile Include="ndBIMInterface.Designer.cs">
       <DependentUpon>ndBIMInterface.cs</DependentUpon>
     </Compile>
+    <Compile Include="ParameterManager.cs" />
     <Compile Include="Parameters.cs" />
     <Compile Include="ProjectParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,9 +72,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <Compile Include="UtilsExcel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ndBIM.addin" />
+    <Content Include="ndBIM.addin">
+      <SubType>Designer</SubType>
+    </Content>
     <Resource Include="Resources\btn06.png" />
     <Resource Include="Resources\btn05.png" />
     <Resource Include="Resources\btn04.png" />
