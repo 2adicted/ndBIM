@@ -2038,6 +2038,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
     }
@@ -3673,15 +3681,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ndBIM"
-        "ProductCode" = "8:{4841755F-56B4-409A-BB2A-32E851F4AE3E}"
-        "PackageCode" = "8:{C1CFCCF3-A2F8-4EE6-882C-4D685F66EBEC}"
+        "ProductCode" = "8:{D0EF48E0-D4A5-4136-BCEF-32576163E067}"
+        "PackageCode" = "8:{FF35215B-B2AC-4CDF-A0A0-AA92BD634856}"
         "UpgradeCode" = "8:{42C141A4-1953-4D75-B761-DF4B726E74B3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
-        "DetectNewerInstalledVersion" = "11:TRUE"
+        "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:ndBIM"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

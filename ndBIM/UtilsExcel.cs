@@ -15,7 +15,11 @@ namespace ndBIM
 {
     public static class UtilsExcel
     {
-        public static void CreateExcel(List<string> names, List<List<string>> projectdata, int n)
+        public static void CreateExcel(List<string> names, List<List<string>> projectdata, string name)
+        {
+            CreateExcel(names, projectdata, 0, name);
+        }
+        public static void CreateExcel(List<string> names, List<List<string>> projectdata, int n, string name)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Execl files (*.xlsx)|*.xlsx";
@@ -23,10 +27,10 @@ namespace ndBIM
             saveFileDialog.RestoreDirectory = true;
             saveFileDialog.CreatePrompt = true;
             saveFileDialog.Title = "Export Excel File To";
-            
-            DataSet data = CreateDataset(names, projectdata);
 
-            if(saveFileDialog.ShowDialog() == DialogResult.OK)
+            DataSet data = CreateDataset(names, projectdata, name);
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 clsGeneral cls = new clsGeneral();
                 cls.GenerateExcel2007(saveFileDialog.FileName, data, n);
@@ -54,10 +58,10 @@ namespace ndBIM
             }
             return dataStrings;
         }
-        private static DataSet CreateDataset(List<string> names, List<List<string>> data)
+        private static DataSet CreateDataset(List<string> names, List<List<string>> data, string name)
         {
             // Create two DataTable instances.
-            DataTable table1 = new DataTable("Budget Preparation");
+            DataTable table1 = new DataTable(name);
             DataRow row = null;
             int index = 0;
 
@@ -153,9 +157,13 @@ namespace ndBIM
                     objWorksheet.Cells.Style.Font.SetFromFont(new Font("Arial", 7));
                     objWorksheet.Cells.AutoFitColumns();
                     objWorksheet.Cells.Style.Locked = true;
-                    objWorksheet.Cells.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    objWorksheet.Cells.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                    objWorksheet.Protection.IsProtected = true;
+
+                    if(n > 0)
+                    {
+                        objWorksheet.Cells.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        objWorksheet.Cells.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                        objWorksheet.Protection.IsProtected = true;
+                    }
 
                     var start = objWorksheet.Dimension.Start;
                     var end = objWorksheet.Dimension.End;
@@ -163,7 +171,7 @@ namespace ndBIM
                     //(Un)Lock the columns
                     for (int column = start.Column; column < end.Column; column++)
                     {
-                        if(column > 1 && column < 3 * (n + 1) + 3)
+                        if(n > 0 && column > 1 && column < 3 * (n + 1) + 3)
                         {
                             ExcelColumn columns = objWorksheet.Column(column);
                             columns.Style.Locked = false;
@@ -198,17 +206,23 @@ namespace ndBIM
                         objRange.Style.WrapText = true;
                     }
                 }
+                try
+                {
+                    //Write it back to the client    
+                    if (File.Exists(p_strPath))
+                        File.Delete(p_strPath);
 
-                //Write it back to the client    
-                if (File.Exists(p_strPath))
-                    File.Delete(p_strPath);
+                    //Create excel file on physical disk    
+                    FileStream objFileStrm = File.Create(p_strPath);
+                    objFileStrm.Close();
 
-                //Create excel file on physical disk    
-                FileStream objFileStrm = File.Create(p_strPath);
-                objFileStrm.Close();
-
-                //Write content to excel file    
-                File.WriteAllBytes(p_strPath, objExcelPackage.GetAsByteArray());
+                    //Write content to excel file    
+                    File.WriteAllBytes(p_strPath, objExcelPackage.GetAsByteArray());
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

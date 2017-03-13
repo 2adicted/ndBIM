@@ -40,6 +40,13 @@ namespace ndBIM
             data.AddRange(group02().Select(x => Tuple.Create(x.Item1, x.Item3)));
             return data;
         }
+        internal static List<Tuple<string, string>> ProjectData()
+        {
+            List<Tuple<string, string>> data = new List<Tuple<string, string>>();
+            data.AddRange(group02().Select(x => Tuple.Create(x.Item1, x.Item3)));
+            data.RemoveRange(0, 3);
+            return data;
+        }
         internal static Dictionary<string, string> parameterTypeMap(int n)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -71,6 +78,17 @@ namespace ndBIM
             names.AddRange(temp);
             names.Add("Family Type");
             names.Add("Category");
+
+            return names;
+        }
+        internal static List<string> ProjectParameterNames()
+        {
+            List<string> names = new List<string>();
+            
+            List<string> temp = group02().Select((x, index) => String.Format("{0} - {1}", (index-2).ToString("00"), x.Item1)).ToList();
+            temp.RemoveRange(0, 3);
+            names.AddRange(temp);
+            names.Add("Family Type");
 
             return names;
         }

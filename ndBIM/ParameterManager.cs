@@ -30,6 +30,14 @@ namespace ndBIM
             parameterMap = new Dictionary<int, string>();
             parameterTypeMap = new Dictionary<string, string>();
         }
+        internal void ExportVICO()
+        {
+            this.num = 0;
+            List<string> names = Parameters.ProjectParameterNames();
+            ParameterDispatcher();
+
+            UtilsExcel.CreateExcel(names, projectData, "VICO");
+        }
 
         internal void ExportExcel()
         {
@@ -37,7 +45,7 @@ namespace ndBIM
             List<string> names = Parameters.ProjectParameterNames(num);
             ParameterDispatcher();
 
-            UtilsExcel.CreateExcel(names, projectData, num);
+            UtilsExcel.CreateExcel(names, projectData, num, "Budget Preparation");
         }
 
         internal void ImportExcel()
@@ -48,10 +56,10 @@ namespace ndBIM
                 return;
             }
             this.num = Parameters.ImportNum(projectDataArray.First().Length);
-            ParameterPopuate();
+            ParameterPopulate();
         }
 
-        internal void ParameterPopuate()
+        internal void ParameterPopulate()
         {
             // UPDATE AFTER COLUMNS ADJUSTMENT
             parameterMap = Parameters.parameterMap(num);
@@ -104,12 +112,20 @@ namespace ndBIM
         internal void ParameterDispatcher()
         {
             CategorySet catSet = Utils.AssignableCategories(uiapp, doc);
-            projectParameters = Parameters.ProjectData(num);
+            if(num > 0)
+            {
+                projectParameters = Parameters.ProjectData(num);
+            }
+            else
+            {
+                projectParameters = Parameters.ProjectData();
+            }
 
             // For each Category
             foreach (Category cat in catSet)
             {
                 IList<Element> isntanceCollector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
+                HashSet<string> unique = new HashSet<string>();
                 string catName = cat.Name;
                 if (isntanceCollector.Count < 1) continue;
 
@@ -121,7 +137,7 @@ namespace ndBIM
                         List<string> elParameters = new List<string>();
                         Element type = doc.GetElement(el.GetTypeId());
 
-                        elParameters.Add(el.UniqueId.ToString());
+                        if(num > 0) elParameters.Add(el.UniqueId.ToString());
 
                         foreach(Tuple<string, string> tuple in projectParameters)
                         {
@@ -153,8 +169,18 @@ namespace ndBIM
                         {
                             elParameters.Add(type.Name); 
                         }
-                        elParameters.Add(catName);
-                        projectData.Add(elParameters);
+                        if (num > 0)
+                        {
+                            elParameters.Add(catName);
+                            projectData.Add(elParameters);
+                        }
+                        if (num == 0)
+                        {
+                            if (unique.Add(elParameters.Aggregate((i, j) => i + "," + j)))
+                            {
+                                projectData.Add(elParameters);
+                            }
+                        }
                     }
                     catch (Exception)
                     {
@@ -162,6 +188,5 @@ namespace ndBIM
                 }
             }
         }
-
     }
 }

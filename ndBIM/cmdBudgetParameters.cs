@@ -113,6 +113,27 @@ namespace ndBIM
         }
     }
     [Transaction(TransactionMode.Manual)]
+    public class cmdExportVICO : IExternalCommand
+    {
+        public string msg;
+
+        public Result Execute(
+          ExternalCommandData commandData,
+          ref string message,
+          ElementSet elements)
+        {
+            UIApplication uiapp = commandData.Application;
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            Application app = uiapp.Application;
+            Document doc = uidoc.Document;
+
+            ParameterManager manager = new ParameterManager(uiapp, doc);
+            manager.ExportVICO();
+
+            return Result.Succeeded;
+        }
+    }
+    [Transaction(TransactionMode.Manual)]
     public class cmdToolsAndHosts : IExternalCommand
     {
         public string msg;
