@@ -50,7 +50,7 @@ namespace ndBIM
             {
                 clsGeneral cls = new clsGeneral();
                 DataTable data = cls.ReadExcel2007(openFileDialog.FileName, true);
-                
+                if (data == null) return null;
                 foreach(DataRow row in data.Rows)
                 {
                     dataStrings.Add(row.ItemArray.OfType<string>().ToArray());
@@ -101,6 +101,7 @@ namespace ndBIM
             catch(Exception ex)
             {
                 MessageBox.Show("Failed opening file. File read-only or opened by user. Please, close the file before proceeding.");
+                return null;
             }
             using (MemoryStream ms = new MemoryStream(file))
             using (ExcelPackage package = new ExcelPackage(ms))
