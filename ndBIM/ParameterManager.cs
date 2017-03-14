@@ -65,16 +65,16 @@ namespace ndBIM
             parameterMap = Parameters.parameterMap(num);
             parameterTypeMap = Parameters.parameterTypeMap(num);
 
-            using (Transaction t = new Transaction(doc, "Import parameters"))
-            {
-                t.Start();
-                foreach (string[] arr in projectDataArray)
+            Dictionary<string, string> type = new Dictionary<string, string>();
+            
+                using (Transaction t = new Transaction(doc, "Import parameters"))
                 {
-                    try
+                    t.Start();
+                    foreach (string[] arr in projectDataArray)
                     {
                         Element el = doc.GetElement(arr[0]);
                         // UPDATE AFTER COLUMNS ADJUSTMENT (2 becomes 1 - last two numbers)
-                        for(int i = 1; i < parameterMap.Count-2; i ++)
+                        for (int i = 1; i < parameterMap.Count - 2; i++)
                         {
                             string name = parameterMap[i];
                             if (Parameters.IsInsanceParameter(name, parameterTypeMap))
@@ -87,28 +87,31 @@ namespace ndBIM
                             }
                             else
                             {
-                                Element type = doc.GetElement(el.GetTypeId());
-                                {
-                                    if(type != null)
-                                    {
-                                        Parameter p = el.LookupParameter(parameterMap[i]);
-                                        if (p != null)
-                                        {
-                                            p.Set(arr[i]);
-                                        }
-                                    }
-                                }
+                                type[String.Format("{0}:{1}", el.GetTypeId().IntegerValue.ToString(), parameterMap[i])] = arr[i];
                             }
                         }
                     }
-                    catch(Exception ex)
+                    t.Commit();
+                }
+
+            using (Transaction t1 = new Transaction(doc, "Importe Type Parameters"))
+            {
+                t1.Start();
+                foreach(var pair in type)
+                {
+                    string[] sp = pair.Key.Split(':');
+                    if (sp[0].Equals("-1")) continue;
+                    Element el = doc.GetElement(new ElementId(Convert.ToInt32(sp[0])));
+                    Parameter p = el.LookupParameter(sp[1]);
+                    if (p != null)
                     {
-                        TaskDialog.Show("Failed.", ex.ToString());
+                        p.Set(pair.Value);
                     }
                 }
-                t.Commit();
+                t1.Commit();
             }
         }
+    
         internal void ParameterDispatcher()
         {
             CategorySet catSet = Utils.AssignableCategories(uiapp, doc);

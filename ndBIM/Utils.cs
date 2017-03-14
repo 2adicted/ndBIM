@@ -228,9 +228,11 @@ namespace ndBIM
         {
             CategorySet catSet = uiapp.Application.Create.NewCategorySet();
             Categories categories = doc.Settings.Categories;
+            List<int> banned = Parameters.bannedRevitCategories();
 
             foreach (Category cat in categories)
             {
+                if (banned.Contains(cat.Id.IntegerValue)) continue;
                 if (cat.AllowsBoundParameters)
                 {
                     catSet.Insert(cat);
@@ -255,6 +257,25 @@ namespace ndBIM
                 return (n-1);
             }
             return 0;
+        }
+
+        public class FailureHandler : IFailuresPreprocessor
+        {
+            public FailureHandler()
+            {
+            }
+
+            public FailureProcessingResult PreprocessFailures(
+                FailuresAccessor failuresAccessor)
+            {
+                IList<FailureMessageAccessor> failureMessages = failuresAccessor.GetFailureMessages();
+
+                if (failureMessages.Count > 0)
+                {
+                    return FailureProcessingResult.ProceedWithRollBack;
+                }
+                return FailureProcessingResult.Continue;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,44 @@ namespace ndBIM
         {
             // UPDATE AFTER COLUMNS ADJUSTMENT (9 to 8 - minus 1 column)
             return (count - 9) / 3;
+        }
+        internal static List<int> bannedRevitCategories()
+        {
+            List<int> list = new List<int>
+            {
+                (int) BuiltInCategory.OST_BeamAnalytical,
+                (int) BuiltInCategory.OST_BraceAnalytical,
+                (int) BuiltInCategory.OST_ColumnAnalytical,
+                (int) BuiltInCategory.OST_FloorAnalytical,
+                (int) BuiltInCategory.OST_FoundationSlabAnalytical,
+                (int) BuiltInCategory.OST_IsolatedFoundationAnalytical,
+                (int) BuiltInCategory.OST_AnalyticalNodes,
+                (int) BuiltInCategory.OST_WallFoundationAnalytical,
+                (int) BuiltInCategory.OST_WallAnalytical,
+                (int) BuiltInCategory.OST_AreaLoads,
+                (int) BuiltInCategory.OST_AreaSchemes,
+                (int) BuiltInCategory.OST_Areas,
+                (int) BuiltInCategory.OST_Assemblies,
+                (int) BuiltInCategory.OST_DetailComponents,
+                (int) BuiltInCategory.OST_FilledRegion,
+                (int) BuiltInCategory.OST_MaskingRegion,
+                (int) BuiltInCategory.OST_Entourage,
+                (int) BuiltInCategory.OST_Grids,
+                (int) BuiltInCategory.OST_HVAC_Zones,
+                (int) BuiltInCategory.OST_Levels,
+                (int) BuiltInCategory.OST_Materials,
+                (int) BuiltInCategory.OST_ModelText,
+                (int) BuiltInCategory.OST_PointClouds,
+                (int) BuiltInCategory.OST_PointLoads,
+                (int) BuiltInCategory.OST_ProjectInformation,
+                (int) BuiltInCategory.OST_SitePropertyLineSegment,
+                (int) BuiltInCategory.OST_RasterImages,
+                (int) BuiltInCategory.OST_RvtLinks,
+                (int) BuiltInCategory.OST_Sheets,
+                (int) BuiltInCategory.OST_Views,
+            };
+
+            return list;
         }
         internal static Dictionary<int, string> parameterMap(int n)
         {
@@ -44,7 +83,6 @@ namespace ndBIM
         {
             List<Tuple<string, string>> data = new List<Tuple<string, string>>();
             data.AddRange(group02().Select(x => Tuple.Create(x.Item1, x.Item3)));
-            data.RemoveRange(0, 3);
             return data;
         }
         internal static Dictionary<string, string> parameterTypeMap(int n)
@@ -73,7 +111,7 @@ namespace ndBIM
             names.Add("ID");
             names.AddRange(group01(n));
 
-            List<string> temp = group02().Select((x, index) => String.Format("{0} - {1}", index.ToString("00"), x.Item1)).ToList();
+            List<string> temp = group02().Select((x, index) => String.Format("{0} - {1}", (index + 1).ToString("00"), x.Item1)).ToList();
 
             names.AddRange(temp);
             names.Add("Family Type");
@@ -85,8 +123,7 @@ namespace ndBIM
         {
             List<string> names = new List<string>();
             
-            List<string> temp = group02().Select((x, index) => String.Format("{0} - {1}", (index-2).ToString("00"), x.Item1)).ToList();
-            temp.RemoveRange(0, 3);
+            List<string> temp = group02().Select((x, index) => String.Format("{0} - {1}", (index + 1).ToString("00"), x.Item1)).ToList();
             names.AddRange(temp);
             names.Add("Family Type");
 
