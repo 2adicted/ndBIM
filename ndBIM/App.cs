@@ -34,7 +34,7 @@ namespace ndBIM
                 "Creates and populates current project with predefined Shared Parameters.", "btn01.png");
             CreatePushButton(ribbonPanel_01, "Automatic Fill", thisAssemblyPath, "ndBIM.cmdToolsAndHosts",
                 "Automatically populate Budget parameters. Only use after using Budget Parameters first.", "btn02.png");
-            CreatePushButton(ribbonPanel_02, "Exprot to Excel", thisAssemblyPath, "ndBIM.cmdExportExcel",
+            CreatePushButton(ribbonPanel_02, "Export to Excel", thisAssemblyPath, "ndBIM.cmdExportExcel",
                 "Exports Budget Parameters to Excel.", "btn03.png");
             CreatePushButton(ribbonPanel_02, "Import from Excel", thisAssemblyPath, "ndBIM.cmdImportExcel",
                 "Import Budget Parameters from Excel.", "btn04.png");

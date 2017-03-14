@@ -8,6 +8,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using System.Linq;
+using AdnRme;
 #endregion
 
 namespace ndBIM
@@ -200,25 +201,34 @@ namespace ndBIM
 
             using (Transaction t = new Transaction(doc, "Modelling Tool Populate"))
             {
+                int n = catSet.Size;
+
+                string s = "{0} of " + n.ToString() + " categories processed...";
+                string caption = "Modelling Tools";
+
                 t.Start();
                 int count = 0;
-                foreach (Category cat in catSet)
-                {
-                    try
+                using (ProgressForm pf = new ProgressForm(caption, s, n))
+                { 
+                    foreach (Category cat in catSet)
                     {
-                        IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsElementType().ToElements();
-                        if (collector.Count < 1) continue;
-                        foreach (Element el in collector)
+                        pf.Increment();
+                        try
                         {
-                            Parameter p = el.LookupParameter("Modelling Tool");
+                            IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsElementType().ToElements();
+                            if (collector.Count < 1) continue;
+                            foreach (Element el in collector)
+                            {
+                                Parameter p = el.LookupParameter("Modelling Tool");
 
-                            if (p != null) p.Set(cat.Name);
+                                if (p != null) p.Set(cat.Name);
+                            }
+                            count++;
                         }
-                        count++;
-                    }
-                    catch (Exception)
-                    {
-                        //TaskDialog.Show("Failed", cat.Name + " : " + ex);
+                        catch (Exception)
+                        {
+                            //TaskDialog.Show("Failed", cat.Name + " : " + ex);
+                        }
                     }
                 }
                 if (count == 0)
@@ -249,36 +259,46 @@ namespace ndBIM
 
             using (Transaction t = new Transaction(doc, "Window and Door Hosts Populate"))
             {
+                int n = catSet.Size;
+
+                string s = "{0} of " + n.ToString() + " categories processed...";
+                string caption = "Windows and Doors";
+
                 t.Start();
                 int count = 0;
-                foreach (Category cat in catSet)
+                using (ProgressForm pf = new ProgressForm(caption, s, n))
                 {
-                    try
+                    foreach (Category cat in catSet)
                     {
-                        IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
-                        if (collector.Count < 1) continue;
-                        foreach (Element el in collector)
+                        pf.Increment();
+                        try
                         {
-                            Parameter p = el.LookupParameter("Windows and Doors Host");
-
-                            string hostName = "";
-
-                            foreach (HostObject hostObject in hostObjects)
+                            IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
+                            if (collector.Count < 1) continue;
+                            foreach (Element el in collector)
                             {
-                                IList<ElementId> ids = hostObject.FindInserts(false, false, false, false);
-                                if(ids.Contains(el.Id))
+                                Parameter p = el.LookupParameter("Windows and Doors Host");
+
+                                string hostName = "";
+
+                                foreach (HostObject hostObject in hostObjects)
                                 {
-                                    hostName = String.Format("{0}",(hostObject as Wall).WallType.Name);
+                                    IList<ElementId> ids = hostObject.FindInserts(false, false, false, false);
+                                    if (ids.Contains(el.Id))
+                                    {
+                                        hostName = String.Format("{0}", (hostObject as Wall).WallType.Name);
+                                    }
                                 }
+                                if (p != null) p.Set(hostName);
                             }
-                            if (p != null) p.Set(hostName);
+                            count++;
                         }
-                        count++;
+                        catch (Exception)
+                        {
+                            //TaskDialog.Show("Failed", cat.Name + " : " + ex);
+                        }
                     }
-                    catch (Exception)
-                    {
-                        //TaskDialog.Show("Failed", cat.Name + " : " + ex);
-                    }
+
                 }
                 if (count == 0)
                 {
@@ -295,47 +315,57 @@ namespace ndBIM
 
             using (Transaction t = new Transaction(doc, "Modelling Tool Populate"))
             {
+                int n = catSet.Size;
+
+                string s = "{0} of " + n.ToString() + " categories processed...";
+                string caption = "BoQ";
+
                 t.Start();
                 int count = 0;
-                foreach (Category cat in catSet)
+                using (ProgressForm pf = new ProgressForm(caption, s, n))
                 {
-                    try
+                    foreach (Category cat in catSet)
                     {
-                        IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
-                        //IList<Element> collector = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType().ToElements();
-                        if (collector.Count < 1) continue;
-                        foreach (Element el in collector)
+                        pf.Increment();
+                        try
                         {
-                            Parameter p = el.LookupParameter("BoQ Codes, Units and Factors");
-                            int i = 1;
-                            string name = "";
-                            string second = "";
-                            //Element type = doc.GetElement(el.GetTypeId());
-                            while (el.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))) != null)
+                            IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
+                            //IList<Element> collector = new FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType().ToElements();
+                            if (collector.Count < 1) continue;
+                            foreach (Element el in collector)
                             {
-                                string a = el.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))).AsString();
-                                string b = el.LookupParameter(String.Format("Unit_{0}", i.ToString("00"))).AsString();
-                                string c = el.LookupParameter(String.Format("Factor_{0}", i.ToString("00"))).AsString();
-                                if (!String.IsNullOrEmpty(c)) c = String.Format("({0})", c);
-                                if (string.IsNullOrEmpty(a + b + c))
+                                Parameter p = el.LookupParameter("BoQ Codes, Units and Factors");
+                                int i = 1;
+                                string name = "";
+                                string second = "";
+                                //Element type = doc.GetElement(el.GetTypeId());
+                                while (el.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))) != null)
                                 {
+                                    string a = el.LookupParameter(String.Format("Budget Code_{0}", i.ToString("00"))).AsString();
+                                    string b = el.LookupParameter(String.Format("Unit_{0}", i.ToString("00"))).AsString();
+                                    string c = el.LookupParameter(String.Format("Factor_{0}", i.ToString("00"))).AsString();
+                                    if (!String.IsNullOrEmpty(c)) c = String.Format("({0})", c);
+                                    if (string.IsNullOrEmpty(a + b + c))
+                                    {
+                                        i++;
+                                        continue;
+                                    }
+                                    name += second;
+                                    name += String.Format("{0}_{1}{2}", a, b, c);
+                                    second = "#";
                                     i++;
-                                    continue;
                                 }
-                                name += second;
-                                name += String.Format("{0}_{1}{2}", a, b, c);
-                                second = "#";
-                                i++;
-                            }
 
-                            if (p != null) p.Set(name);
+                                if (p != null) p.Set(name);
+                            }
+                            count++;
                         }
-                        count++;
+                        catch (Exception)
+                        {
+                            //TaskDialog.Show("Failed", cat.Name + " : " + ex);
+                        }
                     }
-                    catch (Exception)
-                    {
-                        //TaskDialog.Show("Failed", cat.Name + " : " + ex);
-                    }
+
                 }
                 if (count == 0)
                 {

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RevitAddIns>
   <AddIn Type="Application">
-    <!--<Name>ndBIM</Name>-->
+    <Name>ndBIM</Name>
     <Assembly>C:\Program Files\ndBIM\ndBIM\ndBIM.dll</Assembly>
-    <Assembly>ndBIM.dll</Assembly>
+    <!--<Assembly>ndBIM.dll</Assembly>-->
     <FullClassName>ndBIM.App</FullClassName>
     <ClientId>b52587c6-434c-4101-9f0c-9d51c00bcf6b</ClientId>
     <VendorId>ndbim.com</VendorId>

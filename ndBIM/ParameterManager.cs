@@ -1,4 +1,5 @@
-﻿using Autodesk.Revit.DB;
+﻿using AdnRme;
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using System;
 using System.Collections.Generic;
@@ -66,12 +67,22 @@ namespace ndBIM
             parameterTypeMap = Parameters.parameterTypeMap(num);
 
             Dictionary<string, string> type = new Dictionary<string, string>();
-            
-                using (Transaction t = new Transaction(doc, "Import parameters"))
+
+            int n = projectDataArray.Count;
+
+            string s = "{0} of " + n.ToString() + " elements processed...";
+            string caption = "Import from Excel";
+
+            using (Transaction t = new Transaction(doc, "Import parameters"))
+            {
+                t.Start();
+
+                using (ProgressForm pf = new ProgressForm(caption, s, n))
                 {
-                    t.Start();
                     foreach (string[] arr in projectDataArray)
                     {
+                        pf.Increment();
+
                         Element el = doc.GetElement(arr[0]);
                         // UPDATE AFTER COLUMNS ADJUSTMENT (2 becomes 1 - last two numbers)
                         for (int i = 1; i < parameterMap.Count - 2; i++)
@@ -93,19 +104,29 @@ namespace ndBIM
                     }
                     t.Commit();
                 }
-
+            }
             using (Transaction t1 = new Transaction(doc, "Importe Type Parameters"))
             {
                 t1.Start();
-                foreach(var pair in type)
+                 
+                n = type.Count;
+
+                s = "{0} of " + n.ToString() + " type parameters processed...";
+
+                using (ProgressForm pf = new ProgressForm(caption, s, n))
                 {
-                    string[] sp = pair.Key.Split(':');
-                    if (sp[0].Equals("-1")) continue;
-                    Element el = doc.GetElement(new ElementId(Convert.ToInt32(sp[0])));
-                    Parameter p = el.LookupParameter(sp[1]);
-                    if (p != null)
+                    foreach (var pair in type)
                     {
-                        p.Set(pair.Value);
+                        pf.Increment();
+
+                        string[] sp = pair.Key.Split(':');
+                        if (sp[0].Equals("-1")) continue;
+                        Element el = doc.GetElement(new ElementId(Convert.ToInt32(sp[0])));
+                        Parameter p = el.LookupParameter(sp[1]);
+                        if (p != null)
+                        {
+                            p.Set(pair.Value);
+                        }
                     }
                 }
                 t1.Commit();

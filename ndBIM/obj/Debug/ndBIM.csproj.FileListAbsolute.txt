@@ -8,3 +8,4 @@ C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug
 C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug\ndBIM.g.resources
 C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\bin\Debug\EPPlus.dll
 C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\bin\Debug\EPPlus.xml
+C:\Users\Deyan Nenov\Documents\Visual Studio 2015\Projects\ndBIM\ndBIM\obj\Debug\AdnRme.ProgressForm.resources
