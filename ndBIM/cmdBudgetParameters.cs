@@ -85,6 +85,12 @@ namespace ndBIM
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
+            if (!Utils.IsAlreadyBound(doc, "Modelling Tool"))
+            {
+                TaskDialog.Show("Import from Excel will not execute.", "No Budget Parameters exist to be populated.");
+                return Result.Failed;
+            }
+
             ParameterManager manager = new ParameterManager(uiapp, doc);
             manager.ImportExcel();
             
@@ -157,9 +163,14 @@ namespace ndBIM
                 return Result.Failed;
             }
 
-            tools.ModellingTool();
-            tools.WindowsAndDoorsHosts();
-            tools.BoQ();
+            using (TransactionGroup tgx = new TransactionGroup(doc))
+            {
+                tgx.Start();
+                tools.ModellingTool();
+                tools.WindowsAndDoorsHosts();
+                tools.BoQ();
+                tgx.Commit();
+            }
 
             TaskDialog.Show("Status", "Tools and Hosts successfully finished.");
             return Result.Succeeded;
@@ -212,6 +223,12 @@ namespace ndBIM
                 { 
                     foreach (Category cat in catSet)
                     {
+                        if (pf.getAbortFlag())
+                        {
+                            t.RollBack();
+                            return;
+                        }
+
                         pf.Increment();
                         try
                         {
@@ -221,7 +238,7 @@ namespace ndBIM
                             {
                                 Parameter p = el.LookupParameter("Modelling Tool");
 
-                                if (p != null) p.Set(cat.Name);
+                                if (p != null && !p.IsReadOnly) p.Set(cat.Name);
                             }
                             count++;
                         }
@@ -255,28 +272,34 @@ namespace ndBIM
                 .OfClass(typeof(Wall))
                 .WhereElementIsNotElementType()
                 .Cast<HostObject>()
+                //.Where(x => x.FindInserts(false, false, false, false).Count > 0)
                 .ToList();
 
             using (Transaction t = new Transaction(doc, "Window and Door Hosts Populate"))
             {
-                int n = catSet.Size;
-
-                string s = "{0} of " + n.ToString() + " categories processed...";
-                string caption = "Windows and Doors";
-
                 t.Start();
                 int count = 0;
-                using (ProgressForm pf = new ProgressForm(caption, s, n))
+                foreach (Category cat in catSet)
                 {
-                    foreach (Category cat in catSet)
+                    try
                     {
-                        pf.Increment();
-                        try
+                        IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
+                        if (collector.Count < 1) continue;
+                        int n = collector.Count;
+
+                        string s = "{0} of " + n.ToString() + " elements processed...";
+                        string caption = cat.Name;
+
+                        using (ProgressForm pf = new ProgressForm(caption, s, n))
                         {
-                            IList<Element> collector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
-                            if (collector.Count < 1) continue;
                             foreach (Element el in collector)
                             {
+                                if (pf.getAbortFlag())
+                                {
+                                    t.RollBack();
+                                    return;
+                                }
+                                pf.Increment();
                                 Parameter p = el.LookupParameter("Windows and Doors Host");
 
                                 string hostName = "";
@@ -287,19 +310,21 @@ namespace ndBIM
                                     if (ids.Contains(el.Id))
                                     {
                                         hostName = String.Format("{0}", (hostObject as Wall).WallType.Name);
+                                        break;
                                     }
                                 }
-                                if (p != null) p.Set(hostName);
+                                if (p != null && !p.IsReadOnly) p.Set(hostName);
                             }
                             count++;
                         }
-                        catch (Exception)
-                        {
-                            //TaskDialog.Show("Failed", cat.Name + " : " + ex);
-                        }
                     }
-
+                    catch (Exception)
+                    {
+                        //TaskDialog.Show("Failed", cat.Name + " : " + ex);
+                    }
                 }
+
+                
                 if (count == 0)
                 {
                     TaskDialog.Show("Windows And Doors Hosts failed to execute.", "No Windows or Door elements with Modelling Tool parameter found in this document.");
@@ -326,6 +351,7 @@ namespace ndBIM
                 {
                     foreach (Category cat in catSet)
                     {
+                        if (pf.getAbortFlag()) break;
                         pf.Increment();
                         try
                         {
@@ -356,7 +382,7 @@ namespace ndBIM
                                     i++;
                                 }
 
-                                if (p != null) p.Set(name);
+                                if (p != null && !p.IsReadOnly) p.Set(name);
                             }
                             count++;
                         }

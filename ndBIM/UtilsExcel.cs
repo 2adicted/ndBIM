@@ -56,6 +56,10 @@ namespace ndBIM
                     dataStrings.Add(row.ItemArray.OfType<string>().ToArray());
                 }
             }
+            else
+            {
+                return null;
+            }
             return dataStrings;
         }
         private static DataSet CreateDataset(List<string> names, List<List<string>> data, string name)

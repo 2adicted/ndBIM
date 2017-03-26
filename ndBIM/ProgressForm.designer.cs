@@ -30,6 +30,7 @@ namespace AdnRme
         {
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnAbort = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -48,12 +49,23 @@ namespace AdnRme
             this.label1.TabIndex = 1;
             this.label1.Text = "Processing...";
             // 
+            // btnAbort
+            // 
+            this.btnAbort.Location = new System.Drawing.Point(177, 57);
+            this.btnAbort.Name = "btnAbort";
+            this.btnAbort.Size = new System.Drawing.Size(75, 23);
+            this.btnAbort.TabIndex = 2;
+            this.btnAbort.Text = "Cancel";
+            this.btnAbort.UseVisualStyleBackColor = true;
+            this.btnAbort.Click += new System.EventHandler(this.btnAbort_Click_1);
+            // 
             // ProgressForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(429, 61);
+            this.ClientSize = new System.Drawing.Size(429, 91);
             this.ControlBox = false;
+            this.Controls.Add(this.btnAbort);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.progressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -74,5 +86,6 @@ namespace AdnRme
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button btnAbort;
     }
 }

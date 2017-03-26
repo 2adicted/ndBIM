@@ -40,7 +40,7 @@ namespace ndBIM
                 "Import Budget Parameters from Excel.", "btn04.png");
             CreatePushButton(ribbonPanel_03, "Export to VICO", thisAssemblyPath, "ndBIM.cmdExportVICO",
                 "Export to VICO.", "btn05.png");
-            CreatePushButton(ribbonPanel_04, "About us", thisAssemblyPath, "ndBIM.cmdAboutUs", "About us.", "btn06.png");
+            CreatePushButton(ribbonPanel_04, "About us", thisAssemblyPath, "ndBIM.cmdAboutUs", "Version 1.0.7", "btn06.png");
         }
         private static void CreatePushButton(RibbonPanel ribbonPanel, string name, string path, string command, string tooltip, string icon)
         {

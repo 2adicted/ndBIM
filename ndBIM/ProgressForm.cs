@@ -32,7 +32,7 @@ namespace AdnRme
   public partial class ProgressForm : Form
   {
     string _format;
-
+    bool abortFlag;
     /// <summary>
     /// Set up progress bar form and immediately display it modelessly.
     /// </summary>
@@ -60,6 +60,18 @@ namespace AdnRme
         label1.Text = string.Format( _format, progressBar1.Value );
       }
       Application.DoEvents();
+    }
+        
+
+    public bool getAbortFlag()
+    {
+        return abortFlag;
+    }
+
+    private void btnAbort_Click_1(object sender, EventArgs e)
+    {
+        btnAbort.Text = "Aborting...";
+        abortFlag = true;
     }
 
 #if USE_MARTINS_PROGRESS_FORM
@@ -95,5 +107,5 @@ namespace AdnRme
     }
 #endif // USE_MARTINS_PROGRESS_FORM
 
-  }
+    }
 }

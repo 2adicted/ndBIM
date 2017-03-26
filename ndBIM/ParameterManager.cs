@@ -73,6 +73,7 @@ namespace ndBIM
             string s = "{0} of " + n.ToString() + " elements processed...";
             string caption = "Import from Excel";
 
+
             using (Transaction t = new Transaction(doc, "Import parameters"))
             {
                 t.Start();
@@ -81,25 +82,45 @@ namespace ndBIM
                 {
                     foreach (string[] arr in projectDataArray)
                     {
-                        pf.Increment();
+                        Element el = null;
 
-                        Element el = doc.GetElement(arr[0]);
-                        // UPDATE AFTER COLUMNS ADJUSTMENT (2 becomes 1 - last two numbers)
-                        for (int i = 1; i < parameterMap.Count - 2; i++)
+                        if (pf.getAbortFlag())
                         {
-                            string name = parameterMap[i];
-                            if (Parameters.IsInsanceParameter(name, parameterTypeMap))
+                            t.RollBack();
+                            return;
+                        }
+                        pf.Increment();
+                        try
+                        {
+                            el = doc.GetElement(arr[0]);
+                        }
+                        catch(Exception)
+                        {
+                            continue;
+                        }
+                        if (el == null) continue;
+                        try
+                        {
+                            for (int i = 1; i < parameterMap.Count - 2; i++)
                             {
-                                Parameter p = el.LookupParameter(parameterMap[i]);
-                                if (p != null)
+                                string name = parameterMap[i];
+                                if (Parameters.IsInsanceParameter(name, parameterTypeMap))
                                 {
-                                    p.Set(arr[i]);
+                                    Parameter p = el.LookupParameter(parameterMap[i]);
+                                    if (p != null && !p.IsReadOnly)
+                                    {
+                                        p.Set(arr[i]);
+                                    }
+                                }
+                                else
+                                {
+                                    type[String.Format("{0}:{1}", el.GetTypeId().IntegerValue.ToString(), parameterMap[i])] = arr[i];
                                 }
                             }
-                            else
-                            {
-                                type[String.Format("{0}:{1}", el.GetTypeId().IntegerValue.ToString(), parameterMap[i])] = arr[i];
-                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            TaskDialog.Show("Error", ex.Message);
                         }
                     }
                     t.Commit();
@@ -117,13 +138,18 @@ namespace ndBIM
                 {
                     foreach (var pair in type)
                     {
+                        if (pf.getAbortFlag())
+                        {
+                            t1.RollBack();
+                            return;
+                        }
                         pf.Increment();
 
                         string[] sp = pair.Key.Split(':');
                         if (sp[0].Equals("-1")) continue;
                         Element el = doc.GetElement(new ElementId(Convert.ToInt32(sp[0])));
                         Parameter p = el.LookupParameter(sp[1]);
-                        if (p != null)
+                        if (p != null && !p.IsReadOnly)
                         {
                             p.Set(pair.Value);
                         }
@@ -144,70 +170,85 @@ namespace ndBIM
             {
                 projectParameters = Parameters.ProjectData();
             }
-
+            int catCounter = 0;
             // For each Category
             foreach (Category cat in catSet)
             {
+                catCounter++;
                 IList<Element> isntanceCollector = new FilteredElementCollector(doc).OfCategoryId(cat.Id).WhereElementIsNotElementType().ToElements();
-                HashSet<string> unique = new HashSet<string>();
-                string catName = cat.Name;
                 if (isntanceCollector.Count < 1) continue;
 
-                // For each element
-                foreach (Element el in isntanceCollector)
+                HashSet<string> unique = new HashSet<string>();
+
+                string catName = cat.Name;
+
+                int n = isntanceCollector.Count;
+                string s = "{0} of " + n.ToString() + String.Format(" elements of {0} category processed... .{1}/{2} cat.", catName, catCounter.ToString(), catSet.Size.ToString());
+                string caption = "Exporting..";
+
+                using (ProgressForm pf = new ProgressForm(caption, s, n))
                 {
-                    try
+                    // For each element
+                    foreach (Element el in isntanceCollector)
                     {
-                        List<string> elParameters = new List<string>();
-                        Element type = doc.GetElement(el.GetTypeId());
-
-                        if(num > 0) elParameters.Add(el.UniqueId.ToString());
-
-                        foreach(Tuple<string, string> tuple in projectParameters)
+                        try
                         {
-                            if(tuple.Item2.Equals("Instance"))
+                            if (pf.getAbortFlag())
                             {
-                                Parameter p = el.LookupParameter(tuple.Item1);
-                                string s = "  ";
-                                if (p != null && p.HasValue && !String.IsNullOrEmpty(p.AsString())) s = p.AsString();
-                                elParameters.Add(s);
+                                return;
+                            }
+                            pf.Increment();
+                            List<string> elParameters = new List<string>();
+                            Element type = doc.GetElement(el.GetTypeId());
+
+                            if (num > 0) elParameters.Add(el.UniqueId.ToString());
+
+                            foreach (Tuple<string, string> tuple in projectParameters)
+                            {
+                                if (tuple.Item2.Equals("Instance"))
+                                {
+                                    Parameter p = el.LookupParameter(tuple.Item1);
+                                    string emptyString = "  ";
+                                    if (p != null && p.HasValue && !String.IsNullOrEmpty(p.AsString())) emptyString = p.AsString();
+                                    elParameters.Add(emptyString);
+                                }
+                                else
+                                {
+                                    if (type == null)
+                                    {
+                                        elParameters.Add("No Type");
+                                        continue;
+                                    }
+                                    Parameter p = type.LookupParameter(tuple.Item1);
+                                    string emptyString = "  ";
+                                    if (p != null && p.HasValue) emptyString = p.AsString();
+                                    elParameters.Add(emptyString);
+                                }
+                            }
+                            if (type == null)
+                            {
+                                elParameters.Add("No Type");
                             }
                             else
                             {
-                                if (type == null)
-                                {
-                                    elParameters.Add("No Type");
-                                    continue;
-                                }
-                                Parameter p = type.LookupParameter(tuple.Item1);
-                                string s = "  ";
-                                if (p != null && p.HasValue) s = p.AsString();
-                                elParameters.Add(s);
+                                elParameters.Add(type.Name);
                             }
-                        }
-                        if(type == null)
-                        {
-                            elParameters.Add("No Type");
-                        }
-                        else
-                        {
-                            elParameters.Add(type.Name); 
-                        }
-                        if (num > 0)
-                        {
-                            elParameters.Add(catName);
-                            projectData.Add(elParameters);
-                        }
-                        if (num == 0)
-                        {
-                            if (unique.Add(elParameters.Aggregate((i, j) => i + "," + j)))
+                            if (num > 0)
                             {
+                                elParameters.Add(catName);
                                 projectData.Add(elParameters);
                             }
+                            if (num == 0)
+                            {
+                                if (unique.Add(elParameters.Aggregate((i, j) => i + "," + j)))
+                                {
+                                    projectData.Add(elParameters);
+                                }
+                            }
                         }
-                    }
-                    catch (Exception)
-                    {
+                        catch (Exception)
+                        {
+                        }
                     }
                 }
             }

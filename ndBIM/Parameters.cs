@@ -11,8 +11,7 @@ namespace ndBIM
     {
         internal static int ImportNum(int count)
         {
-            // UPDATE AFTER COLUMNS ADJUSTMENT (9 to 8 - minus 1 column)
-            return (count - 9) / 3;
+            return (count - 8) / 3;
         }
         internal static List<int> bannedRevitCategories()
         {
